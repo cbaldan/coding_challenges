@@ -1,4 +1,4 @@
-package hackerrank.sherlockstring;
+package coding.website.hackerrank;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +58,7 @@ public class SherlockString {
 			frequencySum = frequencyMap.get(c);
 
 			if (frequencySum == null) {
-				frequencySum = new Integer(0);
+				frequencySum = Integer.valueOf(0);
 			}
 
 			frequencySum++;

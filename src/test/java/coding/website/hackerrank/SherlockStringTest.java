@@ -1,9 +1,9 @@
-package hackerrank;
+package coding.website.hackerrank;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import hackerrank.sherlockstring.SherlockString;
+import coding.website.hackerrank.SherlockString;
 
 public class SherlockStringTest {
 
