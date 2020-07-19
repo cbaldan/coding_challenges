@@ -1,76 +1,60 @@
 package coding.website.leetcode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * https://leetcode.com/problems/3sum/
  * 
- * Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
- * Note:
- * The solution set must not contain duplicate triplets.
+ * Given an array nums of n integers, are there elements a, b, c in nums such
+ * that a + b + c = 0? Find all unique triplets in the array which gives the sum
+ * of zero. Note: The solution set must not contain duplicate triplets.
  * 
- * Example:
- * Given array nums = [-1, 0, 1, 2, -1, -4],
+ * Example: Given array nums = [-1, 0, 1, 2, -1, -4],
  * 
- * A solution set is:
- * [
- *   [-1, 0, 1],
- *     [-1, -1, 2]
- * ]
+ * A solution set is: [ [-1, 0, 1], [-1, -1, 2] ]
  * 
  * @author Cleber
  */
 public class ThreeSumSolution {
-	
+
 	public static List<List<Integer>> threeSum(int[] nums) {
+		return threeSum(nums, 0);
+	}
 
-		Arrays.sort(nums);
+	public static List<List<Integer>> threeSum(int[] nums, final int targetSum) {
+		Arrays.parallelSort(nums);
 
-		List<List<Integer>> resultList = new LinkedList<>();
-		HashSet<Integer> startingNumber = new HashSet<>();
+		List<List<Integer>> result = new LinkedList<>();
 
-		if (nums.length >= 3) {
-			for (int i = 0; i < nums.length; i++) {
-				
-				System.out.println(i);
+		for (int i = 0; i < nums.length; i++) {
+			int j = i + 1;
+			int k = nums.length - 1;
 
-				boolean added = startingNumber.add(nums[i]);
-				if (!added)
+			if (i > 0 && nums[i] == nums[i - 1]) {
+				continue;
+			}
+
+			while (j < k) {
+				if (k < nums.length - 1 && nums[k] == nums[k + 1]) {
+					k--;
 					continue;
+				}
 
-				for (int j = i + 1; j < nums.length; j++) {
-
-					for (int k = j + 1; k < nums.length; k++) {
-						if ((nums[i] + nums[j] + nums[k]) == 0) {
-
-							List<Integer> newResult = new ArrayList<>(3);
-							newResult.add(nums[i]);
-							newResult.add(nums[j]);
-							newResult.add(nums[k]);
-
-							boolean addNewResult = true;
-							for (int l = 0; l < resultList.size(); l++) {
-								List<Integer> result = resultList.get(l);
-								if (result.equals(newResult)) {
-									addNewResult = false;
-									break;
-								}
-							}
-
-							if (addNewResult) {
-								resultList.add(newResult);
-							}
-						}
-					}
+				if (nums[i] + nums[j] + nums[k] > targetSum) {
+					k--;
+				} else if (nums[i] + nums[j] + nums[k] < targetSum) {
+					j++;
+				} else {
+					result.add(Arrays.asList(nums[i], nums[j], nums[k]));
+					j++;
+					k--;
 				}
 			}
 		}
 
-		return resultList;
+		return result;
 	}
 
 }
