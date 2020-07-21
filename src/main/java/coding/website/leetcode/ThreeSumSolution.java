@@ -112,4 +112,90 @@ public class ThreeSumSolution {
         return res;
     }
 
+    /**
+     * Found the fastest version of the algorithm on LeetCode and improved it to beat itself!
+     * <p>
+     * https://leetcode.com/submissions/detail/369521410/
+     * 
+     * @param nums array to be searched for triplets
+     * @return List with triplets, or empty list
+     */
+    public static List<List<Integer>> threeSumFastest(int[] nums) {
+        int minVal = Integer.MAX_VALUE;
+        int maxVal = Integer.MIN_VALUE;
+        int posNums = 0;
+        int negNums = 0;
+        int zeroNums = 0;
+
+        for (int num : nums) {
+            if (num < minVal)
+                minVal = num;
+            if (num > maxVal)
+                maxVal = num;
+            if (num == 0)
+                zeroNums++;
+            else if (num > 0)
+                posNums++;
+            else
+                negNums++;
+        }
+
+        List<List<Integer>> result = new LinkedList<>();
+        if (zeroNums >= 3) {
+            result.add(Arrays.asList(0, 0, 0));
+        }
+
+        if (minVal >= 0 || maxVal <= 0)
+            return result;
+        if (maxVal + 2 * minVal > 0)
+            maxVal = -2 * minVal;
+        if (minVal + 2 * maxVal < 0)
+            minVal = -2 * maxVal;
+        int[] numMap = new int[maxVal - minVal + 1];
+        int[] posNumMap = new int[posNums];
+        int[] negNumMap = new int[negNums];
+        posNums = 0;
+        negNums = 0;
+        for (int num : nums) {
+            if (num >= minVal && num <= maxVal) {
+                if (numMap[num - minVal]++ == 0) {
+                    if (num > 0) {
+                        posNumMap[posNums++] = num;
+                    } else if (num < 0) {
+                        negNumMap[negNums++] = num;
+                    }
+                }
+            }
+        }
+
+        Arrays.parallelSort(posNumMap, 0, posNums);
+        Arrays.parallelSort(negNumMap, 0, negNums);
+        int posStart = 0;
+        for (int i = negNums - 1; i >= 0; i--) {
+            int nv = negNumMap[i];
+            int minpv = (-nv) / 2;
+            while (posStart < posNums && posNumMap[posStart] < minpv)
+                posStart++;
+            for (int j = posStart; j < posNums; j++) {
+                int pv = posNumMap[j];
+                int ln = 0 - nv - pv;
+                if (ln >= nv && ln <= pv) {
+                    if (numMap[ln - minVal] == 0)
+                        continue;
+                    else if (ln == nv && numMap[ln - minVal] > 1) {
+                        result.add(Arrays.asList(nv, ln, pv));
+                    } else if (ln == pv && numMap[ln - minVal] > 1) {
+                        result.add(Arrays.asList(nv, ln, pv));
+                    } else if (ln != nv && ln != pv) {
+                        result.add(Arrays.asList(nv, ln, pv));
+                    }
+                } else if (ln < nv) {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
 }
